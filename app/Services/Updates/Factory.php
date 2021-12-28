@@ -4,6 +4,11 @@ namespace App\Services\Updates;
 
 class Factory {
 
+    /**
+     * Create and return an Update class based on the request sent by Telegram API
+     * @param array $update request sent by Telegram API
+     * @return Update
+     */
     public function create(array $update) : Update {
         if(isset($update['message']['text'])) {
             return new Message('text');
