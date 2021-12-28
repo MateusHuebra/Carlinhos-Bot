@@ -15,10 +15,11 @@ class TelegramAPI {
 
     public function send(string $response, Reply $reply, array $update) {
         if($reply->type==='message') {
-            $this->sendMessage($response, $update);
+            $telegramResponse = $this->sendMessage($response, $update);
         } else if($reply->type==='sticker') {
 
         }
+        file_put_contents('php://stderr', "\n\ntelegram response: ".print_r($telegramResponse, true));
     }
 
     private function sendMessage(string $response, array $update) {
@@ -29,8 +30,8 @@ class TelegramAPI {
             $delay = 5000000;
         }
         usleep($delay);
-        
-        $this->telegram->sendMessage(
+
+        return $this->telegram->sendMessage(
             $update['message']['chat']['id'],
             $response,
             'MarkdownV2',
