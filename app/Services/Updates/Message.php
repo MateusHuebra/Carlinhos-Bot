@@ -13,7 +13,7 @@ class Message implements Update {
         $this->textIndex = $textIndex;
     }
 
-    function handle(array $update) {
+    function handle(array $update) : Pattern {
         $message = $update['message'];
         $matchedPattern = null;
 
@@ -55,7 +55,7 @@ class Message implements Update {
      * @param string $text user's message
      * @return string fixed user's message
      */
-    public function fixTypos(string $text) : string {
+    private function fixTypos(string $text) : string {
         $text = preg_replace(['/\bo q\b/ui', '/\boq\b/ui', '/\bo quê\b/ui'], 'o que', $text);
         $text = preg_replace(['/\bn\b/ui', '/\bnao\b/ui', '/\bnn\b/ui'], 'não', $text);
         $text = preg_replace(['/\bvc\b/ui', '/\bvoce\b/ui', '/\btu\b/ui'], 'você', $text);
@@ -70,7 +70,7 @@ class Message implements Update {
         return $text;
     }
 
-    public function wasCarlinhosMentioned(array $message) {
+    private function wasCarlinhosMentioned(array $message) {
         if(
             (
                 isset($message['reply_to_message'])
