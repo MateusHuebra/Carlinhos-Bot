@@ -10,7 +10,7 @@ class TelegramAPI {
     private $telegram;
 
     public function __construct() {
-        $this->telegram = new BotApi(env(TELEGRAM_API_TOKEN));
+        $this->telegram = new BotApi(env('TELEGRAM_API_TOKEN'));
     }
 
     public function send(string $response, Reply $reply, array $update) {
