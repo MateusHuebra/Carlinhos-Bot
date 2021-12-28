@@ -6,6 +6,7 @@ use App\Models\Pattern;
 
 class Message implements Update {
 
+    const PATTERNS_PER_PAGE = 3;
     private $textIndex;
 
     function __construct($textIndex) {
@@ -14,21 +15,21 @@ class Message implements Update {
 
     function handle(array $update) {
         $message = $update['message'];
-        $response = null;
         $matchedPattern = null;
 
         $message['text'] = $this->fixTypos($update['message'][$this->textIndex]);
 
-        $patternsQueryBuilder = Pattern::whereNotNull('regex')->take(3);
+        $patternsQueryBuilder = Pattern::whereNotNull('regex')->take(self::PATTERNS_PER_PAGE);
 
-        //check if carlinhos was mentioned
-        if((isset($message['reply_to_message']) && $message['reply_to_message']['from']['username'] == 'carlosbot') || strpos(strtolower($message['text']), "carlinhos") !== false || strpos(strtolower($message['text']), "@carlosbot") !== false || $message['chat']['type']=='private') {
+        if($this->wasCarlinhosMentioned($message)) {
             $patternsQueryBuilder->orderBy('need_mention', 'DESC');
         } else {
             $patternsQueryBuilder->where('need_mention', false);
         }
 
         $patternsQueryBuilder->orderBy('priority', 'DESC');
+        //echo $patternsQueryBuilder->toSql();
+        //die;
 
         $skip = 0;
         while($matchedPattern===null) {
@@ -42,8 +43,9 @@ class Message implements Update {
                     return $matchedPattern;
                 }
             }
-            $skip+=3;
+            $skip+=self::PATTERNS_PER_PAGE;
         }
+
         return null;
 
     }
@@ -66,6 +68,25 @@ class Message implements Update {
         $text = preg_replace(['/\btmj\b/ui'], 'tamo junto', $text);
         $text = preg_replace(['/\b[o]+[p]+[a]+\b/ui', '/\b[o]+[l]+[aá]+\b/ui', '/\b[o]+[i]+[e]*\b/ui', '/\b[e]+[i]+\b/ui'], 'oi', $text);
         return $text;
+    }
+
+    public function wasCarlinhosMentioned(array $message) {
+        if(
+            (
+                isset($message['reply_to_message'])
+                &&
+                $message['reply_to_message']['from']['username'] == 'carlosbot'
+            )
+            ||
+            strpos(strtolower($message['text']), "carlinhos") !== false
+            ||
+            strpos(strtolower($message['text']), "@carlosbot") !== false
+            ||
+            $message['chat']['type']=='private'
+        ) {
+            return true;
+        }
+        return false;
     }
 
 }
