@@ -8,13 +8,19 @@ class Replies {
 
     public function handle(int $patternId, array $update, TelegramAPI $telegram) {
         $reply = $this->randomReply($patternId);
+        if($reply===null) {
+            die();
+        }
         $response = $this->replaceVariables($reply->reply, $update, $telegram);
         $telegram->send($response, $reply, $update);
     }
 
-    private function randomReply(int $patternId) : Reply {
+    private function randomReply(int $patternId) {
         $replyQueryBuilder = Reply::where('pattern_id', $patternId);
         $repliesCount = $replyQueryBuilder->count();
+        if($repliesCount===0) {
+            return null;
+        }
         $randomIndex = rand(0, $repliesCount-1);
         return $replyQueryBuilder->skip($randomIndex)->first();
     }

@@ -14,7 +14,7 @@ class TelegramAPI {
     }
 
     public function send(string $response, Reply $reply, array $update) {
-        file_put_contents('php://stderr', "\n\npreparing to send");
+        file_put_contents('php://stderr', "\n\n preparing to send");
 
         if($reply->type==='message') {
             $telegramResponse = $this->sendMessage($response, $update);
@@ -22,7 +22,7 @@ class TelegramAPI {
 
         }
         
-        file_put_contents('php://stderr', "\nsent");
+        file_put_contents('php://stderr', "\n sent");
     }
 
     private function sendMessage(string $response, array $update) {
