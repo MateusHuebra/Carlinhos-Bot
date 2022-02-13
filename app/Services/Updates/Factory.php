@@ -10,6 +10,8 @@ class Factory {
      * @return Update corresponding update class
      */
     public function create(array $update) : Update {
+        file_put_contents('php://stderr', "\n\n\n".json_encode($update, JSON_PRETTY_PRINT));
+        
         if(isset($update['message']['text'])) {
             return new Message('text');
         } else if(isset($update['message']['caption'])) {

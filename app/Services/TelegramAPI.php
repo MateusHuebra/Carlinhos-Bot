@@ -14,12 +14,15 @@ class TelegramAPI {
     }
 
     public function send(string $response, Reply $reply, array $update) {
+        file_put_contents('php://stderr', "\n\npreparing to send");
+
         if($reply->type==='message') {
             $telegramResponse = $this->sendMessage($response, $update);
         } else if($reply->type==='sticker') {
 
         }
-        file_put_contents('php://stderr', "\n\ntelegram response: ".print_r($telegramResponse, true));
+        
+        file_put_contents('php://stderr', "\nsent");
     }
 
     private function sendMessage(string $response, array $update) {

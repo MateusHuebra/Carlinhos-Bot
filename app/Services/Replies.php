@@ -15,15 +15,26 @@ class Replies {
     private function randomReply(int $patternId) : Reply {
         $replyQueryBuilder = Reply::where('pattern_id', $patternId);
         $repliesCount = $replyQueryBuilder->count();
+        file_put_contents('php://stderr', "\n");
         $randomIndex = rand(0, $repliesCount-1);
         return $replyQueryBuilder->skip($randomIndex)->first();
     }
 
     private function replaceVariables(string $replyText, array $update, TelegramAPI $telegram) : string {
-        if(isset($update['message'])) {
             
-            if(strpos($replyText, '{chat_members_count}')!==false) {
-                $replyText = str_replace('{chat_members_count}', $telegram->get('chatMembersCount', $update), $replyText);
+        if(strpos($replyText, '{chat_members_count}')!==false) {
+            $replyText = str_replace('{chat_members_count}', $telegram->get('chatMembersCount', $update), $replyText);
+        }
+        
+        if(isset($update['message'])) {
+
+            if(strpos($replyText, '{new_chat_member}')!==false) {
+                $names[] = $update['message']['new_chat_member']['first_name'];
+                if(isset($update['message']['new_chat_member']['last_name'])) {
+                    $names[] = $update['message']['new_chat_member']['first_name'].' '.$update['message']['new_chat_member']['last_name'];
+                }
+                $name = $names[rand(0, count($names)-1)];
+                $replyText = str_replace('{new_chat_member}', $name, $replyText);
             }
 
             if(strpos($replyText, '{from_name}')!==false) {

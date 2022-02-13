@@ -75,7 +75,11 @@ class Message implements Update {
             (
                 isset($message['reply_to_message'])
                 &&
-                $message['reply_to_message']['from']['username'] == 'carlosbot'
+                (
+                    $message['reply_to_message']['from']['username'] == 'carlosbot'
+                    ||
+                    $message['reply_to_message']['from']['username'] == 'testesubstitutorosebot'
+                )
             )
             ||
             strpos(strtolower($message['text']), "carlinhos") !== false
