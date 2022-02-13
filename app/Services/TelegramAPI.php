@@ -19,7 +19,7 @@ class TelegramAPI {
         if($reply->type==='message') {
             $telegramResponse = $this->sendMessage($response, $update);
         } else if($reply->type==='sticker') {
-
+            $telegramResponse = $this->sendSticker($response, $update);
         }
         
         file_put_contents('php://stderr', "\n sent");
@@ -40,6 +40,23 @@ class TelegramAPI {
             'MarkdownV2',
             true,
             $update['message']['message_id']
+        );
+    }
+
+    private function sendSticker(string $response, array $update) {
+        $this->telegram->sendChatAction($update['message']['chat']['id'], 'choose_sticker');
+        $delay = rand(2000000, 5000000);
+        if($delay>5000000) {
+            $delay = 5000000;
+        }
+        usleep($delay);
+
+        return $this->telegram->sendSticker(
+            $update['message']['chat']['id'],
+            $response,
+            $update['message']['message_id'],
+            'MarkdownV2',
+            true
         );
     }
 
