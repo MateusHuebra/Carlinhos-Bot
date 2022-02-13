@@ -13,6 +13,8 @@ class Replies {
         }
         if($reply->type==='message') {
             $response = $this->replaceVariables($reply->reply, $update, $telegram);
+        } else {
+            $response = $reply->reply;
         }
         $telegram->send($response, $reply, $update);
     }
