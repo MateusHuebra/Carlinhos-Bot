@@ -39,8 +39,9 @@ class Message implements Update {
                 break;
             }
             foreach ($patterns as $pattern) {
-                file_put_contents('php://stderr', "\n - ".$pattern->name);
+                file_put_contents('php://stderr', "\n - testing ".$pattern->name);
                 if(preg_match('/'.$pattern->regex.'/i', $message['text'], $regexMatches)) {
+                    file_put_contents('php://stderr', "\n pattern matches!");
                     $matchedPattern = $pattern;
                     return $matchedPattern;
                 }

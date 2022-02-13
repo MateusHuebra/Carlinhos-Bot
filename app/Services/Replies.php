@@ -15,7 +15,6 @@ class Replies {
     private function randomReply(int $patternId) : Reply {
         $replyQueryBuilder = Reply::where('pattern_id', $patternId);
         $repliesCount = $replyQueryBuilder->count();
-        file_put_contents('php://stderr', "\n");
         $randomIndex = rand(0, $repliesCount-1);
         return $replyQueryBuilder->skip($randomIndex)->first();
     }
@@ -25,7 +24,7 @@ class Replies {
         if(strpos($replyText, '{chat_members_count}')!==false) {
             $replyText = str_replace('{chat_members_count}', $telegram->get('chatMembersCount', $update), $replyText);
         }
-        
+
         if(isset($update['message'])) {
 
             if(strpos($replyText, '{new_chat_member}')!==false) {
