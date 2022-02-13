@@ -54,9 +54,7 @@ class TelegramAPI {
         return $this->telegram->sendSticker(
             $update['message']['chat']['id'],
             $response,
-            $update['message']['message_id'],
-            'MarkdownV2',
-            true
+            $update['message']['message_id']
         );
     }
 

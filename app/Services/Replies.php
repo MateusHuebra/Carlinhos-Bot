@@ -11,7 +11,9 @@ class Replies {
         if($reply===null) {
             die();
         }
-        $response = $this->replaceVariables($reply->reply, $update, $telegram);
+        if($reply->type==='message') {
+            $response = $this->replaceVariables($reply->reply, $update, $telegram);
+        }
         $telegram->send($response, $reply, $update);
     }
 
