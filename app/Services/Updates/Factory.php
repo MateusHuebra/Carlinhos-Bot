@@ -20,7 +20,7 @@ class Factory {
             return new NewChatParticipant();
         }
         
-        file_put_contents('php://stderr', "\n\nnot handleble Update type");
+        file_put_contents('php://stderr', "\n\n not handlable Update type");
         return null;
     }
 

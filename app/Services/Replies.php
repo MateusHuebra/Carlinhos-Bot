@@ -19,7 +19,7 @@ class Replies {
         $replyQueryBuilder = Reply::where('pattern_id', $patternId);
         $repliesCount = $replyQueryBuilder->count();
         if($repliesCount===0) {
-            file_put_contents('php://stderr', "\n\nnot replies linked to pattern");
+            file_put_contents('php://stderr', "\n\n no replies linked to pattern");
             return null;
         }
         $randomIndex = rand(0, $repliesCount-1);
