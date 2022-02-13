@@ -34,6 +34,7 @@ class Message implements Update {
         $skip = 0;
         while($matchedPattern===null) {
             $patterns = $patternsQueryBuilder->skip($skip)->get();
+            file_put_contents('php://stderr', "\n\n patterns->count(): ".$patterns->count());
             if($patterns->count()===0) {
                 break;
             }
