@@ -7,9 +7,9 @@ class Factory {
     /**
      * Create and return an Update class based on the request sent by Telegram API
      * @param array $update request sent by Telegram API
-     * @return Update corresponding update class
+     * @return Update|Null corresponding update class
      */
-    public function create(array $update) : Update {
+    public function create(array $update) {
         file_put_contents('php://stderr', "\n\n\n".json_encode($update, JSON_PRETTY_PRINT));
         
         if(isset($update['message']['text'])) {
@@ -19,6 +19,8 @@ class Factory {
         } else if(isset($update['message']['new_chat_participant'])) {
             return new NewChatParticipant();
         }
+        
+        return null;
     }
 
 }

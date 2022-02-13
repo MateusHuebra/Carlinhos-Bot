@@ -18,8 +18,13 @@ class BotController extends Controller
 
         //create and handle update sent by Telegram API acording to its type
         $update = (new Factory)->create($request->all());
+
+        if ($update===null) {
+            die();
+        }
+
         $matchedPattern = $update->handle($request->all());
-        
+    
         if($matchedPattern) {
             $telegram = new TelegramAPI();
             (new Replies)->handle($matchedPattern->id, $request->all(), $telegram);
