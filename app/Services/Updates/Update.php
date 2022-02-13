@@ -11,6 +11,6 @@ interface Update {
      * @param array $update request sent by Telegram API
      * @return Pattern pattern which matched update
      */
-    function handle(array $update) : Pattern;
+    function handle(array $update);
 
 }

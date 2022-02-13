@@ -13,7 +13,7 @@ class Message implements Update {
         $this->textIndex = $textIndex;
     }
 
-    function handle(array $update) : Pattern {
+    function handle(array $update) {
         $message = $update['message'];
         $matchedPattern = null;
 
