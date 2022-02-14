@@ -41,9 +41,15 @@ class Message implements Update {
             foreach ($patterns as $pattern) {
                 file_put_contents('php://stderr', "\n - testing ".$pattern->name);
                 if(preg_match('/'.$pattern->regex.'/i', $message['text'], $regexMatches)) {
-                    file_put_contents('php://stderr', " <– pattern matches!");
-                    $matchedPattern = $pattern;
-                    return $matchedPattern;
+                    $chance = rand(1, 100);
+                    file_put_contents('php://stderr', " <– pattern matches! chance:".$pattern->chance.' draw:'.$chance);
+                    if($pattern->chance === 100 || $chance <= $pattern->chance) {
+                        file_put_contents('php://stderr', ' ✓');
+                        $matchedPattern = $pattern;
+                        return $matchedPattern;
+                    } else {
+                        file_put_contents('php://stderr', ' ✕');
+                    }
                 }
             }
             $skip+=self::PATTERNS_PER_PAGE;
