@@ -20,6 +20,8 @@ class TelegramAPI {
             $telegramResponse = $this->sendMessage($response, $update);
         } else if($reply->type==='sticker') {
             $telegramResponse = $this->sendSticker($response, $update);
+        } else if($reply->type==='photo') {
+            $telegramResponse = $this->sendPhoto($response, $update);
         }
         
         file_put_contents('php://stderr', "\n sent");
@@ -54,6 +56,22 @@ class TelegramAPI {
         return $this->telegram->sendSticker(
             $update['message']['chat']['id'],
             $response,
+            $update['message']['message_id']
+        );
+    }
+
+    private function sendPhoto(string $response, array $update) {
+        $this->telegram->sendChatAction($update['message']['chat']['id'], 'upload_photo');
+        $delay = rand(2000000, 5000000);
+        if($delay>5000000) {
+            $delay = 5000000;
+        }
+        usleep($delay);
+
+        return $this->telegram->sendPhoto(
+            $update['message']['chat']['id'],
+            $response,
+            null,
             $update['message']['message_id']
         );
     }
