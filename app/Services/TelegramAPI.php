@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Reply;
+use Exception;
 use TelegramBot\Api\BotApi;
 
 class TelegramAPI {
@@ -16,15 +17,19 @@ class TelegramAPI {
     public function send(string $response, Reply $reply, array $update) {
         file_put_contents('php://stderr', "\n\n preparing to send");
 
-        if($reply->type==='message') {
-            $telegramResponse = $this->sendMessage($response, $update);
-        } else if($reply->type==='sticker') {
-            $telegramResponse = $this->sendSticker($response, $update);
-        } else if($reply->type==='photo') {
-            $telegramResponse = $this->sendPhoto($response, $update);
+        try {
+            if ($reply->type==='message') {
+                $telegramResponse = $this->sendMessage($response, $update);
+            } elseif ($reply->type==='sticker') {
+                $telegramResponse = $this->sendSticker($response, $update);
+            } elseif ($reply->type==='photo') {
+                $telegramResponse = $this->sendPhoto($response, $update);
+            }
+            file_put_contents('php://stderr', "\n sent");
+        } catch (Exception $e) {
+            file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
         }
         
-        file_put_contents('php://stderr', "\n sent \n\nTelegram response: ". print_r($telegramResponse, true));
     }
 
     private function sendMessage(string $response, array $update) {
