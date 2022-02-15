@@ -24,7 +24,7 @@ class TelegramAPI {
             $telegramResponse = $this->sendPhoto($response, $update);
         }
         
-        file_put_contents('php://stderr', "\n sent");
+        file_put_contents('php://stderr', "\n sent \n\nTelegram response: ".$telegramResponse);
     }
 
     private function sendMessage(string $response, array $update) {

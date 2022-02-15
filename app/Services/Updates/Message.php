@@ -34,7 +34,7 @@ class Message implements Update {
         $skip = 0;
         while($matchedPattern===null) {
             $patterns = $patternsQueryBuilder->skip($skip)->get();
-            file_put_contents('php://stderr', "\n\n patterns->count(): ".$patterns->count());
+            file_put_contents('php://stderr', "\n\n collected patterns: ".$patterns->count());
             if($patterns->count()===0) {
                 break;
             }
@@ -55,6 +55,7 @@ class Message implements Update {
             $skip+=self::PATTERNS_PER_PAGE;
         }
 
+        file_put_contents('php://stderr', "\n\n ending search");
         return null;
 
     }
