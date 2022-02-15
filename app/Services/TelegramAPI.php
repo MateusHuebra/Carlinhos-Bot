@@ -33,13 +33,8 @@ class TelegramAPI {
     }
 
     private function sendMessage(string $response, array $update) {
-        $this->telegram->sendChatAction($update['message']['chat']['id'], 'typing');
         $length = strlen($response);
-        $delay = $length * 200000;
-        if($delay>5000000) {
-            $delay = 5000000;
-        }
-        usleep($delay);
+        $this->chatActionWithDelay($update['message']['chat']['id'], 'typing', $length);
 
         return $this->telegram->sendMessage(
             $update['message']['chat']['id'],
@@ -51,12 +46,7 @@ class TelegramAPI {
     }
 
     private function sendSticker(string $response, array $update) {
-        $this->telegram->sendChatAction($update['message']['chat']['id'], 'choose_sticker');
-        $delay = rand(2000000, 5000000);
-        if($delay>5000000) {
-            $delay = 5000000;
-        }
-        usleep($delay);
+        $this->chatActionWithDelay($update['message']['chat']['id'], 'choose_sticker');
 
         return $this->telegram->sendSticker(
             $update['message']['chat']['id'],
@@ -66,12 +56,7 @@ class TelegramAPI {
     }
 
     private function sendPhoto(string $response, array $update) {
-        $this->telegram->sendChatAction($update['message']['chat']['id'], 'upload_photo');
-        $delay = rand(2000000, 5000000);
-        if($delay>5000000) {
-            $delay = 5000000;
-        }
-        usleep($delay);
+        $this->chatActionWithDelay($update['message']['chat']['id'], 'upload_photo');
 
         return $this->telegram->sendPhoto(
             $update['message']['chat']['id'],
@@ -93,6 +78,23 @@ class TelegramAPI {
         
         file_put_contents('php://stderr', "\n\n ".$method.': '.$value);
         return $value;
+    }
+
+    private function chatActionWithDelay($chatId, string $action, $strlen = null) {
+        if(in_array($chatId, [-1001327613590, 847118919])) {
+            return;
+        }
+
+        $this->telegram->sendChatAction($chatId, $action);
+        if($strlen) {
+            $delay = $strlen * 200000;
+            if($delay>5000000) {
+                $delay = 5000000;
+            }
+        } else {
+            $delay = rand(1000000, 5000000);
+        }
+        usleep($delay);
     }
 
 }
