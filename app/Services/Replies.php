@@ -39,29 +39,17 @@ class Replies {
         if(isset($update['message'])) {
 
             if(strpos($replyText, '{new_chat_member}')!==false) {
-                $names[] = $update['message']['new_chat_member']['first_name'];
-                if(isset($update['message']['new_chat_member']['last_name'])) {
-                    $names[] = $update['message']['new_chat_member']['first_name'].' '.$update['message']['new_chat_member']['last_name'];
-                }
-                $name = $names[rand(0, count($names)-1)];
+                $name = $this->handleName($update['message']['new_chat_member']);
                 $replyText = str_replace('{new_chat_member}', $name, $replyText);
             }
 
             if(strpos($replyText, '{from_name}')!==false) {
-                $names[] = $update['message']['from']['first_name'];
-                if(isset($update['message']['from']['last_name'])) {
-                    $names[] = $update['message']['from']['first_name'].' '.$update['message']['from']['last_name'];
-                }
-                $name = $names[rand(0, count($names)-1)];
+                $name = $this->handleName($update['message']['from']);
                 $replyText = str_replace('{from_name}', $name, $replyText);
             }
             
             if(strpos($replyText, '{reply_name}')!==false && isset($update['message']['reply_to_message'])) {
-                $names[] = $update['message']['reply_to_message']['from']['first_name'];
-                if(isset($update['message']['reply_to_message']['from']['last_name'])) {
-                    $names[] = $update['message']['reply_to_message']['from']['first_name'].' '.$update['message']['reply_to_message']['from']['last_name'];
-                }
-                $name = $names[rand(0, count($names)-1)];
+                $name = $this->handleName($update['message']['reply_to_message']['from']);
                 $replyText = str_replace('{reply_name}', $name, $replyText);
             }
 
@@ -74,6 +62,14 @@ class Replies {
         );
 
         return $replyText;
+    }
+
+    private function handleName($names) {
+        $name[] = $names['first_name'];
+        if(isset($names['last_name'])) {
+            $name[] = $names['first_name'].' '.$names['last_name'];
+        }
+        return $name[rand(0, count($name)-1)];
     }
 
 }
