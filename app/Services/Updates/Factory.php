@@ -27,6 +27,9 @@ class Factory {
         } else if(isset($update['message']['new_chat_participant'])) {
             $updateType = "new chat participant";
             $update = new NewChatParticipant();
+        } else if(isset($update['message']['left_chat_participant'])) {
+            $updateType = "left chat participant";
+            $update = new LeftChatParticipant();
         } else {
             $updateType = "not handlable";
             $update = null;
