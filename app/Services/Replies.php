@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Chat;
 use App\Models\Reply;
 
 class Replies {
@@ -50,6 +51,11 @@ class Replies {
             if(strpos($replyText, '{reply_name}')!==false && isset($update['message']['reply_to_message'])) {
                 $name = $this->getName($update['message']['reply_to_message']['from']);
                 $replyText = str_replace('{reply_name}', $name, $replyText);
+            }
+
+            if(strpos($replyText, '{settings')!==false) {
+                $settings = Chat::firstWhere('id', $update['message']['chat']['id']);
+                $replyText = str_replace('{settings_nsfw}', ($settings->nsfw)?'on':'off', $replyText);
             }
 
         }
