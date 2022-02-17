@@ -82,7 +82,7 @@ class TelegramAPI {
     }
 
     public function sendLog(Update $update) {
-        file_put_contents('php://stderr', "\n preparing log");
+        file_put_contents('php://stderr', "\n preparing log (".get_class($update).')');
 
         try {
             if (get_class($update)=='App\Services\Updates\Message' && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
