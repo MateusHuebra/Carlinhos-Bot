@@ -18,11 +18,17 @@ class NSFW implements Command {
             return Pattern::firstWhere('name', 'need admin');
         }
         if($this->parameter!='on' && $this->parameter!='off') {
-            return null;
+            return Pattern::firstWhere('name', 'wrong expression');
         }
         $chat = Chat::firstWhere('id', $update['message']['chat']['id']);
         $chat->nsfw = ($this->parameter=='on')?true:false;
         $chat->save();
+        if($this->parameter=='on') {
+            return Pattern::firstWhere('name', 'nsfw on'); 
+        } else {
+            return Pattern::firstWhere('name', 'nsfw off'); 
+        }
+        
     }
 
 }
