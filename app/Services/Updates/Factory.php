@@ -12,19 +12,29 @@ class Factory {
     public function create(array $update) {
         file_put_contents('php://stderr', "\n\n\n".json_encode($update, JSON_PRETTY_PRINT));
         
-        if(isset($update['message']['text'])) {
-            file_put_contents('php://stderr', "\n\n update type: message (text)");
-            return new Message('text');
+        if(isset($update['message']['entities']) && $update['message']['entities'][0]['type']==='bot_command') {
+            $updateType = "command (text)";
+            $update = new Command('text', 'entities');
+        } else if(isset($update['message']['caption_entities']) && $update['message']['caption_entities'][0]['type']==='bot_command') {
+            $updateType = "command (caption)";
+            $update = new Command('caption', 'caption_entities');
+        } else if(isset($update['message']['text'])) {
+            $updateType = "message (text)";
+            $update = new Message('text');
         } else if(isset($update['message']['caption'])) {
-            file_put_contents('php://stderr', "\n\n update type: message (caption)");
-            return new Message('caption');
+            $updateType = "message (caption)";
+            $update = new Message('caption');
         } else if(isset($update['message']['new_chat_participant'])) {
-            file_put_contents('php://stderr', "\n\n update type: new chat participant");
-            return new NewChatParticipant();
+            $updateType = "new chat participant";
+            $update = new NewChatParticipant();
+        } else {
+            $updateType = "not handlable";
+            $update = null;
         }
         
-        file_put_contents('php://stderr', "\n\n not handlable Update type");
-        return null;
+        file_put_contents('php://stderr', "\n\n update type: ".$updateType);
+        return $update;
+        
     }
 
 }
