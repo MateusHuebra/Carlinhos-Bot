@@ -95,6 +95,7 @@ class TelegramAPI {
                 } else if (isset($update['message']['animation'])) {
                     $this->telegram->sendAnimation(env('T_ADMIN_ID'), $update['message']['animation']['file_id'], $update['message']['caption']);
                 }
+                file_put_contents('php://stderr', "\n needed media sent");
 
                 $response = '';
                 if (isset($update['message']['reply_to_message']['text'])) {
