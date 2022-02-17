@@ -14,7 +14,7 @@ class Message implements Update {
         $this->textIndex = $textIndex;
     }
 
-    function handle(array $update) {
+    function handle(array $update, TelegramAPI $telegram) {
         $message = $update['message'];
         $matchedPattern = null;
 

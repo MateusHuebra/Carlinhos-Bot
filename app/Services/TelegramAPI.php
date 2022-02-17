@@ -81,6 +81,13 @@ class TelegramAPI {
         return $value;
     }
 
+    public function isMemberAdmin($chatId, $userId) {
+        $user = $this->telegram->getChatMember($chatId, $userId);
+        file_put_contents('php://stderr', "\n\n getChatMember: ".print_r($user, true));
+        //if(in_array($user['']))
+        return false;
+    }
+
     public function sendLog(array $update) {
         file_put_contents('php://stderr', "\n preparing log");
         try {

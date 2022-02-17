@@ -25,7 +25,7 @@ class BotController extends Controller
         $telegram = new TelegramAPI();
         $telegram->sendLog($request->all());
 
-        $matchedPattern = $update->handle($request->all());
+        $matchedPattern = $update->handle($request->all(), $telegram);
     
         if($matchedPattern) {
             (new Replies)->handle($matchedPattern->id, $request->all(), $telegram);

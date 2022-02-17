@@ -3,6 +3,7 @@
 namespace App\Services\Updates;
 
 use App\Models\Pattern;
+use App\Services\TelegramAPI;
 
 interface Update {
 
@@ -11,6 +12,6 @@ interface Update {
      * @param array $update request sent by Telegram API
      * @return Pattern pattern which matched update
      */
-    function handle(array $update);
+    function handle(array $update, TelegramAPI $telegram);
 
 }

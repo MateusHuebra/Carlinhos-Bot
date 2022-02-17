@@ -4,6 +4,7 @@ namespace App\Services\Updates;
 
 use App\Models\Pattern;
 use App\Services\Commands\Factory;
+use App\Services\TelegramAPI;
 
 class Command implements Update {
 
@@ -15,13 +16,13 @@ class Command implements Update {
         $this->entitiesIndex = $entitiesIndex;
     }
 
-    function handle(array $update) {
+    function handle(array $update, TelegramAPI $telegram) {
         preg_match('/^(\/\w+(@[\w]+)?) ?([\w\W]+)?$/i', $update['message'][$this->textIndex], $commands);
         file_put_contents('php://stderr', "\n\n commands: ".print_r($commands, true));
         if(is_array($commands)) {
             $command = (new Factory)->create($commands);
             if($command!==null) {
-                return $command->handle($update['message']['chat']['id']);
+                return $command->handle($update, $telegram);
             }
         }
         return null;
