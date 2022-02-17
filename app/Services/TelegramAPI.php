@@ -81,7 +81,10 @@ class TelegramAPI {
         return $value;
     }
 
-    public function isMemberAdmin($chatId, $userId) {
+    public function isMemberAdminOrInPrivate($chatId, $userId) {
+        if($chatId==$userId) {
+            return true;
+        }
         $user = $this->telegram->getChatMember($chatId, $userId);
         file_put_contents('php://stderr', "\n\n getChatMember: ".print_r($user, true));
         if(in_array($user->getStatus(), ['administrator', 'creator'])) {

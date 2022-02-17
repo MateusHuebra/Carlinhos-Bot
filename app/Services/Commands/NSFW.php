@@ -14,7 +14,7 @@ class NSFW implements Command {
     }
 
     function handle($update, $telegram) {
-        if(!$telegram->isMemberAdmin($update['message']['chat']['id'], $update['message']['from']['id'])) {
+        if(!$telegram->isMemberAdminOrInPrivate($update['message']['chat']['id'], $update['message']['from']['id'])) {
             return Pattern::firstWhere('name', 'need admin');
         }
         if($this->parameter!='on' && $this->parameter!='off') {
