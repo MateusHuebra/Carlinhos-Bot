@@ -82,6 +82,7 @@ class TelegramAPI {
     }
 
     public function sendLog(Update $update) {
+        file_put_contents('php://stderr', "\n preparing log");
         try {
             if (get_class($update)=='App\Services\Updates\Message' && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
                 if (isset($update['message']['sticker'])) {
@@ -117,7 +118,7 @@ class TelegramAPI {
                 $response.= PHP_EOL.'chat id: '.($update['message']['chat']['id']??'nulo');
         
                 $this->telegram->sendMessage(env('T_ADMIN_ID'), $response, 'MarkdownV2');
-                
+                file_put_contents('php://stderr', "\n log sent to DM");
             }
         } catch (Exception $e) {
             file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
