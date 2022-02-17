@@ -3,6 +3,7 @@
 namespace App\Services\Updates;
 
 use App\Models\Pattern;
+use App\Services\TelegramAPI;
 
 class Message implements Update {
 
@@ -18,6 +19,7 @@ class Message implements Update {
         $matchedPattern = null;
 
         $message['text'] = $this->fixTypos($update['message'][$this->textIndex]);
+        $message['text'] = TelegramAPI::parseForMarkdownV2($message['text']);
 
         $patternsQueryBuilder = Pattern::whereNotNull('regex')->take(self::PATTERNS_PER_PAGE);
 

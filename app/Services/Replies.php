@@ -39,35 +39,34 @@ class Replies {
         if(isset($update['message'])) {
 
             if(strpos($replyText, '{new_chat_member}')!==false) {
-                $name = $this->handleName($update['message']['new_chat_member']);
+                $name = $this->getName($update['message']['new_chat_member']);
                 $replyText = str_replace('{new_chat_member}', $name, $replyText);
             }
 
             if(strpos($replyText, '{from_name}')!==false) {
-                $name = $this->handleName($update['message']['from']);
+                $name = $this->getName($update['message']['from']);
                 $replyText = str_replace('{from_name}', $name, $replyText);
             }
             
             if(strpos($replyText, '{reply_name}')!==false && isset($update['message']['reply_to_message'])) {
-                $name = $this->handleName($update['message']['reply_to_message']['from']);
+                $name = $this->getName($update['message']['reply_to_message']['from']);
                 $replyText = str_replace('{reply_name}', $name, $replyText);
             }
 
         }
 
-        $replyText = str_replace(
-            ['\\', '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'],
-            ['\\\\', '\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!'],
-            $replyText
-        );
+        $replyText = TelegramAPI::parseForMarkdownV2($replyText);
 
         return $replyText;
     }
 
-    private function handleName($names) {
+    public function getName($names, bool $fullName = false) {
         $name[] = $names['first_name'];
         if(isset($names['last_name'])) {
             $name[] = $names['first_name'].' '.$names['last_name'];
+            if($fullName) {
+                return $name[1];
+            }
         }
         return $name[rand(0, count($name)-1)];
     }

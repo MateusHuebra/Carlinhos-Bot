@@ -23,10 +23,12 @@ class BotController extends Controller
             die();
         }
 
+        $telegram = new TelegramAPI();
+        //$telegram->sendLog($update);
+
         $matchedPattern = $update->handle($request->all());
     
         if($matchedPattern) {
-            $telegram = new TelegramAPI();
             (new Replies)->handle($matchedPattern->id, $request->all(), $telegram);
         }
 
