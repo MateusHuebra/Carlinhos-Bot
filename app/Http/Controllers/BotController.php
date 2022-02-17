@@ -6,7 +6,6 @@ use App\Services\Replies;
 use App\Services\TelegramAPI;
 use App\Services\Updates\Factory;
 use Illuminate\Http\Request;
-use TelegramBot\Api\BotApi;
 
 class BotController extends Controller
 {

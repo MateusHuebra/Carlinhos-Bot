@@ -83,8 +83,8 @@ class TelegramAPI {
 
     public function sendLog(Update $update) {
         file_put_contents('php://stderr', "\n preparing log (".get_class($update).')');
-
         try {
+            file_put_contents('php://stderr', $update['message']['chat']['id']);
             if (get_class($update)=='App\Services\Updates\Message' && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
                 file_put_contents('php://stderr', "\n checking needed media");
                 if (isset($update['message']['sticker'])) {
