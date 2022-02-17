@@ -83,7 +83,7 @@ class TelegramAPI {
 
     public function sendLog(Update $update) {
         file_put_contents('php://stderr', "\n preparing log (".get_class($update).')');
-        try {
+        //try {
             if(isset($update['message']['chat']['id'])) {
                 file_put_contents('php://stderr', ' has chat id');
             } else {
@@ -128,9 +128,9 @@ class TelegramAPI {
                 $this->telegram->sendMessage(env('T_ADMIN_ID'), $response, 'MarkdownV2');
                 file_put_contents('php://stderr', "\n log sent to DM");
             }
-        } catch (Exception $e) {
-            file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
-        }
+        //} catch (Exception $e) {
+        //    file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
+        //}
 
     }
 
