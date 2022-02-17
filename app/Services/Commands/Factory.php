@@ -10,7 +10,7 @@ class Factory {
         if($this->checkCommand('/settings', $commands[1])) {
             $command = new Settings();
         } else if ($this->checkCommand('/nsfw', $commands[1])) {
-            $command = new NSFW($commands[3]);
+            $command = new NSFW($commands[3]??null);
         } else {
             $command = null;
         }
