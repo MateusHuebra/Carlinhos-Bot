@@ -86,6 +86,7 @@ class TelegramAPI {
 
         try {
             if (get_class($update)=='App\Services\Updates\Message' && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
+                file_put_contents('php://stderr', "\n checking needed media");
                 if (isset($update['message']['sticker'])) {
                     $this->telegram->sendSticker(env('T_ADMIN_ID'), $update['message']['sticker']['file_id']);
                 } else if (isset($update['message']['photo'])) {
