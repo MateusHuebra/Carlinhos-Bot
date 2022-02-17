@@ -95,14 +95,14 @@ class TelegramAPI {
                 } else if (isset($update['message']['animation'])) {
                     $this->telegram->sendAnimation(env('T_ADMIN_ID'), $update['message']['animation']['file_id'], $update['message']['caption']);
                 }
-                file_put_contents('php://stderr', "\n needed media sent");
+                file_put_contents('php://stderr', " - needed media sent");
 
                 $response = '';
                 if (isset($update['message']['reply_to_message']['text'])) {
                     $response.= '_'.$update['message']['reply_to_message']['text'].'_'.PHP_EOL;
                 }
                 if (isset($update['message']['reply_to_message']['from']['first_name'])) {
-                    $response.= '_por ['.$update['message']['reply_to_message']['from']->first_name.' '.($update['message']['reply_to_message']['from']->last_name??'').'](tg://user?id='.$update['message']['reply_to_message']['from']['id'].')_';
+                    $response.= '_por ['.$update['message']['reply_to_message']['from']['first_name'].' '.($update['message']['reply_to_message']['from']['last_name']??'').'](tg://user?id='.$update['message']['reply_to_message']['from']['id'].')_';
                     $response.= PHP_EOL.'user id: '.($update['message']['reply_to_message']['from']['id']??'nulo').PHP_EOL.PHP_EOL;
                 }
                 if (isset($update['message']['sticker']['file_id'])||isset($update['message']['animation']['file_id'])||isset($update['message']['photo'][0]['file_id'])) {
@@ -117,11 +117,11 @@ class TelegramAPI {
                     $response.= PHP_EOL.'msg id: '.($update['message']['message_id']??'nulo');
                 }
                 $response.= PHP_EOL.PHP_EOL.'em '.($update['message']['chat']['title']??'privado').PHP_EOL.'link: @'.($update['message']['chat']['username']??' sem link');
-                $response.= PHP_EOL.'chat id: '.($update['message']['chat']['id']??'nulo');
+                $response.= PHP_EOL.'chat id: \\'.($update['message']['chat']['id']??'nulo');
         
-                file_put_contents('php://stderr', "\n sending log");
+                file_put_contents('php://stderr', "\n sending log to DM");
                 $this->telegram->sendMessage(env('T_ADMIN_ID'), $response, 'MarkdownV2');
-                file_put_contents('php://stderr', "\n log sent to DM");
+                file_put_contents('php://stderr', " - log sent");
             }
         } catch (Exception $e) {
             file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
