@@ -15,8 +15,8 @@ class Command implements Update {
     }
 
     function handle(array $update) {
-        preg_match('/^\/\w+/i', $update['message'][$this->textIndex], $commands);
-        file_put_contents('php://stderr', "\n\n commands: [".implode(', ', $commands).']');
+        preg_match('/^(\/\w+(@[\w]+)?) ([\w\W]+)$/i', $update['message'][$this->textIndex], $commands);
+        file_put_contents('php://stderr', "\n\n commands: ".print_r($commands, true));
         return null;
     }
 
