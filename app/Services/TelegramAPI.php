@@ -82,44 +82,45 @@ class TelegramAPI {
     }
 
     public function sendLog(Update $update) {
-        
-        if (get_class($update)=='App\Services\Updates\Message' && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
-            if (isset($update['message']['sticker'])) {
-                $this->telegram->sendSticker(env('T_ADMIN_ID'), $update['message']['sticker']['file_id']);
-            } elseif (isset($update['message']['photo'])) {
-                $this->telegram->sendPhoto(env('T_ADMIN_ID'), $update['message']['photo'][0]['file_id'], $update['message']['caption']);
-            } elseif (isset($update['message']['video'])) {
-                $this->telegram->sendVideo(env('T_ADMIN_ID'), $update['message']['video']['file_id'], null, $update['message']['caption']);
-            } elseif (isset($update['message']['animation'])) {
-                $this->telegram->sendAnimation(env('T_ADMIN_ID'), $update['message']['animation']['file_id'], $update['message']['caption']);
-            }
+        try {
+            if (get_class($update)=='App\Services\Updates\Message' && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
+                if (isset($update['message']['sticker'])) {
+                    $this->telegram->sendSticker(env('T_ADMIN_ID'), $update['message']['sticker']['file_id']);
+                } else if (isset($update['message']['photo'])) {
+                    $this->telegram->sendPhoto(env('T_ADMIN_ID'), $update['message']['photo'][0]['file_id'], $update['message']['caption']);
+                } else if (isset($update['message']['video'])) {
+                    $this->telegram->sendVideo(env('T_ADMIN_ID'), $update['message']['video']['file_id'], null, $update['message']['caption']);
+                } else if (isset($update['message']['animation'])) {
+                    $this->telegram->sendAnimation(env('T_ADMIN_ID'), $update['message']['animation']['file_id'], $update['message']['caption']);
+                }
 
-            $response = '';
-            if (isset($update['message']['reply_to_message']['text'])) {
-                $response.= '_'.$update['message']['reply_to_message']['text'].'_'.PHP_EOL;
-            }
-            if (isset($update['message']['reply_to_message']['from']['first_name'])) {
-                $response.= '_por ['.$update['message']['reply_to_message']['from']->first_name.' '.($update['message']['reply_to_message']['from']->last_name??'').'](tg://user?id='.$update['message']['reply_to_message']['from']['id'].')_';
-                $response.= PHP_EOL.'user id: '.($update['message']['reply_to_message']['from']['id']??'nulo').PHP_EOL.PHP_EOL;
-            }
-            if (isset($update['message']['sticker']['file_id'])||isset($update['message']['animation']['file_id'])||isset($update['message']['photo'][0]['file_id'])) {
-                $response.= '`'.(($update['message']['sticker']['file_id']??$update['message']['animation']['file_id'])??$update['message']['photo'][0]['file_id']).'`'.PHP_EOL;
-            }
-            if (isset($update['message']['text'])) {
-                $response.= '*'.($update['message']['text']??'').'*'.PHP_EOL;
-            }
-            if (isset($update['message']['from']['first_name'])) {
-                $response.= '*por ['.$update['message']['from']['first_name'].' '.($update['message']['from']['last_name']??'').'](tg://user?id='.$update['message']['from']['id'].')*';
-                $response.= PHP_EOL.'user id: '.($update['message']['from']['id']??'nulo');
-                $response.= PHP_EOL.'msg id: '.($update['message']['message_id']??'nulo');
-            }
-            $response.= PHP_EOL.PHP_EOL.'em '.($update['message']['chat']['title']??'privado').PHP_EOL.'link: @'.($update['message']['chat']['username']??' sem link');
-            $response.= PHP_EOL.'chat id: '.($update['message']['chat']['id']??'nulo');
-            try {
+                $response = '';
+                if (isset($update['message']['reply_to_message']['text'])) {
+                    $response.= '_'.$update['message']['reply_to_message']['text'].'_'.PHP_EOL;
+                }
+                if (isset($update['message']['reply_to_message']['from']['first_name'])) {
+                    $response.= '_por ['.$update['message']['reply_to_message']['from']->first_name.' '.($update['message']['reply_to_message']['from']->last_name??'').'](tg://user?id='.$update['message']['reply_to_message']['from']['id'].')_';
+                    $response.= PHP_EOL.'user id: '.($update['message']['reply_to_message']['from']['id']??'nulo').PHP_EOL.PHP_EOL;
+                }
+                if (isset($update['message']['sticker']['file_id'])||isset($update['message']['animation']['file_id'])||isset($update['message']['photo'][0]['file_id'])) {
+                    $response.= '`'.(($update['message']['sticker']['file_id']??$update['message']['animation']['file_id'])??$update['message']['photo'][0]['file_id']).'`'.PHP_EOL;
+                }
+                if (isset($update['message']['text'])) {
+                    $response.= '*'.($update['message']['text']??'').'*'.PHP_EOL;
+                }
+                if (isset($update['message']['from']['first_name'])) {
+                    $response.= '*por ['.$update['message']['from']['first_name'].' '.($update['message']['from']['last_name']??'').'](tg://user?id='.$update['message']['from']['id'].')*';
+                    $response.= PHP_EOL.'user id: '.($update['message']['from']['id']??'nulo');
+                    $response.= PHP_EOL.'msg id: '.($update['message']['message_id']??'nulo');
+                }
+                $response.= PHP_EOL.PHP_EOL.'em '.($update['message']['chat']['title']??'privado').PHP_EOL.'link: @'.($update['message']['chat']['username']??' sem link');
+                $response.= PHP_EOL.'chat id: '.($update['message']['chat']['id']??'nulo');
+        
                 $this->telegram->sendMessage(env('T_ADMIN_ID'), $response, 'MarkdownV2');
-            } catch (Exception $e) {
-                //
+                
             }
+        } catch (Exception $e) {
+            file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
         }
 
     }
