@@ -81,15 +81,10 @@ class TelegramAPI {
         return $value;
     }
 
-    public function sendLog(Update $update) {
-        file_put_contents('php://stderr', "\n preparing log (".get_class($update).')');
-        //try {
-            if(isset($update['message']['chat']['id'])) {
-                file_put_contents('php://stderr', ' has chat id');
-            } else {
-                file_put_contents('php://stderr', ' has not chat id');
-            }
-            if (get_class($update)=='App\Services\Updates\Message' && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
+    public function sendLog(array $update) {
+        file_put_contents('php://stderr', "\n preparing log");
+        try {
+            if (isset($update['message']['chat']['id']) && $update['message']['chat']['id']!=env('T_ADMIN_ID')) {
                 file_put_contents('php://stderr', "\n checking needed media");
                 if (isset($update['message']['sticker'])) {
                     $this->telegram->sendSticker(env('T_ADMIN_ID'), $update['message']['sticker']['file_id']);
@@ -128,9 +123,9 @@ class TelegramAPI {
                 $this->telegram->sendMessage(env('T_ADMIN_ID'), $response, 'MarkdownV2');
                 file_put_contents('php://stderr', "\n log sent to DM");
             }
-        //} catch (Exception $e) {
-        //    file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
-        //}
+        } catch (Exception $e) {
+            file_put_contents('php://stderr', "\n exception thrown: ".$e->getMessage());
+        }
 
     }
 
