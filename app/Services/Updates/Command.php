@@ -16,7 +16,7 @@ class Command implements Update {
     }
 
     function handle(array $update) {
-        preg_match('/^(\/\w+(@[\w]+)?) ([\w\W]+)$/i', $update['message'][$this->textIndex], $commands);
+        preg_match('/^(\/\w+(@[\w]+)?) ?([\w\W]+)?$/i', $update['message'][$this->textIndex], $commands);
         file_put_contents('php://stderr', "\n\n commands: ".print_r($commands, true));
         if(is_array($commands)) {
             $command = (new Factory)->create($commands);
