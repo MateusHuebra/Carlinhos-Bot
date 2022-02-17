@@ -17,7 +17,9 @@ class Command implements Update {
     }
 
     function handle(array $update, TelegramAPI $telegram) {
-        preg_match('/^(\/\w+(@[\w]+)?) ?([\w\W]+)?$/i', $update['message'][$this->textIndex], $commands);
+        if(!preg_match('/^(\/\w+(@[\w]+)?) ?([\w\W]+)?$/i', $update['message'][$this->textIndex], $commands)) {
+            return Pattern::firstWhere('name', 'wrong expression');
+        }
         file_put_contents('php://stderr', "\n\n commands: ".print_r($commands, true));
         if(is_array($commands)) {
             $command = (new Factory)->create($commands);
